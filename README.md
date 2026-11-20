@@ -3,6 +3,7 @@
 La version web d'Instagram Data Viewer est actuellement en phase de développement et peut contenir des problèmes, bugs ou manques. Veuillez attendre la sortie d'une **version stable** avant toutes utilisations.
 
 [Consultez le README de l'application originale d'Instagram Data Viewer](https://github.com/noaribote/Instagram-Data-Viewer/blob/main/README.md)
+
 [Consultez le projet original d'Instagram Data Viewer](https://github.com/noaribote/Instagram-Data-Viewer)
 
 # Instagram Data Viewer — version web locale
