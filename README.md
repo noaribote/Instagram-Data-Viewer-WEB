@@ -15,7 +15,7 @@ Cette version reprend [**l'application originale Instagram Data Viewer**](https:
 Depuis la racine du projet, démarrez le serveur web local :
 
 ```sh
-node .web/server.js
+node server.js
 ```
 
 Ouvrez ensuite `http://127.0.0.1:8000` dans le navigateur. Le serveur ne reçoit pas les archives importées. Pour lancer le scraper, Python et `instaloader` doivent être installés; le serveur utilise automatiquement `.venv` s’il existe, ou l’interpréteur indiqué par la variable `PYTHON`.
