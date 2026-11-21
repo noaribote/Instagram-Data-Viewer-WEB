@@ -1,16 +1,22 @@
 const fs = require("fs");
 const http = require("http");
 const path = require("path");
-const ModelRepository = require("../models/ModelRepository");
-
 const webRoot = __dirname;
-const projectRoot = path.resolve(webRoot, "..");
+const parentRoot = path.resolve(webRoot, "..");
+const projectRoot = fs.existsSync(path.join(parentRoot, "models", "ModelRepository.js"))
+  ? parentRoot
+  : webRoot;
+const repositoryPath = path.join(projectRoot, "models", "ModelRepository.js");
+const ModelRepository = fs.existsSync(repositoryPath) ? require(repositoryPath) : null;
 const localPython = process.platform === "win32"
   ? path.join(projectRoot, ".venv", "Scripts", "python.exe")
   : path.join(projectRoot, ".venv", "bin", "python");
 if (!process.env.PYTHON && fs.existsSync(localPython)) process.env.PYTHON = localPython;
-const repository = new ModelRepository(path.join(projectRoot, "model"));
-const restrictedUsers = require(path.join(projectRoot, "models", "listNoUsername.json"));
+const repository = ModelRepository
+  ? new ModelRepository(path.join(projectRoot, "model"))
+  : null;
+const restrictedUsersPath = path.join(projectRoot, "models", "listNoUsername.json");
+const restrictedUsers = fs.existsSync(restrictedUsersPath) ? require(restrictedUsersPath) : [];
 const mimeTypes = {
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
@@ -44,6 +50,9 @@ async function readBody(request) {
 }
 
 async function handleApi(request, response, url) {
+  if (!repository && url.pathname !== "/api/restricted-usernames") {
+    return sendJson(response, 503, { error: "Le service de profils nécessite les fichiers du projet de bureau." });
+  }
   if (request.method === "GET" && url.pathname === "/api/users") {
     return sendJson(response, 200, await repository.listCachedUsers());
   }

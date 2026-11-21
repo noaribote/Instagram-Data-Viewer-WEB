@@ -629,7 +629,12 @@
         search.disabled = true;
         status.textContent = `Recherche du profil @${username}…`;
         try {
-          const restricted = await request("/api/restricted-usernames");
+          const restrictedResponse = await request("/api/restricted-usernames");
+          const restricted = Array.isArray(restrictedResponse)
+            ? restrictedResponse
+            : Array.isArray(restrictedResponse?.usernames)
+              ? restrictedResponse.usernames
+              : [];
           if (restricted.some((name) => String(name).replace(/^@/, "").toLowerCase() === username.toLowerCase()))
             throw new Error("Ce compte a demandé à préserver son anonymat.");
           const profile = await request(`/api/users/${encodeURIComponent(username)}`, {
